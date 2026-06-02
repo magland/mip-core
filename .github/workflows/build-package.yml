@@ -342,14 +342,11 @@ jobs:
           if ((Test-Path $vsInstaller) -and (Test-Path $vsPath)) {
             & $vsInstaller uninstall --installPath $vsPath --quiet --norestart --force --wait
           }
-          if (Get-Command choco -ErrorAction SilentlyContinue) {
-            choco list -r 2>$null | ForEach-Object {
-              $pkg = ($_ -split '\|')[0]
-              if ($pkg -and $pkg -ne 'chocolatey') {
-                choco uninstall $pkg -y --force --skip-autouninstaller
-              }
-            }
-          }
+          # No per-package `choco uninstall` loop: chocolatey packages are
+          # dev tools, not runtime libraries a MEX links against, and the
+          # whole C:\ProgramData\chocolatey tree is removed below anyway. The
+          # MinGW runtime DLLs that actually matter for self-containment live
+          # in the directories stripped below.
           $paths = @(
             "C:\Program Files\Microsoft Visual Studio",
             "C:\Program Files (x86)\Microsoft Visual Studio",
