@@ -397,6 +397,18 @@ jobs:
       - name: Install Python dependencies
         run: pip install requests pyyaml
 
+      - name: Restore Homebrew for upload (macOS)
+        # The macOS strip step renamed /opt/homebrew (which holds `gh`) to
+        # exercise the package in a brew-free env. The test is done, so put it
+        # back — otherwise the upload step below can't find `gh`. APFS rename
+        # is metadata-only (~ms).
+        if: inputs.architecture == 'macos_arm64'
+        shell: bash
+        run: |
+          if [ -e /opt/homebrew.deleted ]; then
+            sudo mv /opt/homebrew.deleted /opt/homebrew
+          fi
+
       - name: Upload to GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
