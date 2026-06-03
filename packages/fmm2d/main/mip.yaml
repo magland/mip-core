@@ -19,9 +19,6 @@ builds:
     test_script: test_fmm2d.m
     paths:
       - path: "matlab"
-    setup:
-      macos:
-        - "brew install fftw"
   - architectures: [windows_x86_64]
     compile_script: compile_windows.m
     test_script: test_fmm2d.m
@@ -36,10 +33,10 @@ builds:
     setup:
       linux:
         - "sudo apt update"
-        - "sudo apt install -y libfftw3-dev libopenblas-dev"
+        - "sudo apt install -y libopenblas-dev"
   - architectures: [numbl_macos_x86_64]
     compile_script: compile_numbl_native.m
     test_script: test_fmm2d.m
     setup:
       macos:
-        - "brew install fftw openblas"
+        - "brew install openblas"
